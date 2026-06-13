@@ -1,0 +1,5 @@
+useState--component daxilinde state saxlamaq ve UI ni deyisemek ucun istifade edilen hookdur,deyisen yaradir ve
+o deyiseni deyisen funkisya yaradir ve o deyisen deyiserken component render edilir
+2.useState array qaytarir ki biz deyisen variable ye ve onu deyisen funskiayaya istediyim adi vere bilek
+3.React da state deyisereken component yeniden render edilir    
+4.state deyisir==UI deyisir
