@@ -1,10 +1,15 @@
 import { useNavigate } from "react-router-dom";
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, onTrailerClick }) => {
   const navigate = useNavigate();
 
   const goToDetail = () => {
     navigate(`/movie/${movie.id}`);
+  };
+
+  const handleTrailer = (e) => {
+    e.stopPropagation(); // card click ilə qarışmasın
+    onTrailerClick(movie.id);
   };
 
   return (
@@ -17,6 +22,11 @@ const MovieCard = ({ movie }) => {
 
       <h3>{movie.title}</h3>
       <p>⭐ {movie.vote_average}</p>
+
+      {/* 🎬 Trailer Button */}
+      <button style={styles.button} onClick={handleTrailer}>
+        Watch Trailer
+      </button>
     </div>
   );
 };
@@ -34,6 +44,16 @@ const styles = {
   image: {
     width: "100%",
     borderRadius: 10,
+  },
+  button: {
+    marginTop: 10,
+    padding: "8px",
+    width: "100%",
+    background: "red",
+    color: "white",
+    border: "none",
+    borderRadius: 5,
+    cursor: "pointer",
   },
 };
 
