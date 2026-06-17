@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Home from "../pages/Home";
 import { getMovies } from "../services/api";
 import AppRoutes from "./routes/AppRoutes";
 import Header from "./components/Header";
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     const loadMovies = async () => {
       const movies = await getMovies();
@@ -16,8 +17,8 @@ function App() {
 
   return (
     <div>
-      <Header/>
-      <AppRoutes/>
+      <Header setSearchQuery={setSearchQuery}/>
+      <AppRoutes searchQuery={searchQuery}/>
     </div>
   );
 }

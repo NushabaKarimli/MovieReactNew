@@ -4,10 +4,10 @@ import MovieDetail from "../../pages/MovieDetail";
 import Login from "../../pages/Login";
 import Register from "../../pages/Register";
 
-const AppRoutes = () => {
+const AppRoutes = ({ searchQuery }) => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Home searchQuery={searchQuery} />} />
 
       <Route
         path="/movie/:id"
