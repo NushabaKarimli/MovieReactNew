@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { logoutUser } from "../firebase";
+import { ThemeContext } from "../context/ThemeContext";
+import { useAuth } from "../hooks/useAuth";
 
 const Header = ({ setSearchQuery }) => {
   const [search, setSearch] = useState("");
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  
+  // 2. Auth sistemindən istifadəçi məlumatını və çıxış funksiyasını götürürük
+  const { user, logout, isAuthenticated } = useAuth(); 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Mərkəzi state-i istifadəçinin yazdığı sözlə yeniləyirik
     setSearchQuery(search.trim()); 
   };
 
@@ -18,11 +21,13 @@ const Header = ({ setSearchQuery }) => {
         display: "flex",
         justifyContent: "space-between",
         padding: "20px",
-        background: "#111",
-        alignItems: "center"
+        alignItems: "center",
+        background: theme === "dark" ? "#111" : "#fff",
+        borderBottom: theme === "dark" ? "none" : "1px solid #ccc",
+        transition: "background 0.3s ease"
       }}
     >
-      <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
+      <Link to="/" style={{ textDecoration: "none", color: theme === "dark" ? "#fff" : "#111" }}>
         <h2>MovieApp</h2>
       </Link>
 
@@ -32,18 +37,59 @@ const Header = ({ setSearchQuery }) => {
           placeholder="Search movie..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ padding: "5px", borderRadius: "4px", border: "none" }}
+          style={{ 
+            padding: "5px", 
+            borderRadius: "4px", 
+            border: theme === "dark" ? "none" : "1px solid #ccc",
+            background: theme === "dark" ? "#fff" : "#f0f0f0",
+            color: "#000"
+          }}
         />
-
         <button type="submit" style={{ padding: "5px 10px", marginLeft: "5px", cursor: "pointer" }}>
           Search
         </button>
       </form>
 
-      <nav>
-        <Link to="/" style={{ color: "#fff", marginRight: "10px" }}>Home</Link>
-        <Link to="/login" style={{ color: "#fff", marginRight: "10px" }}>Login</Link>
-        <Link to="/register" style={{ color: "#fff" }}>Register</Link>
+      <nav style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+        <Link to="/" style={{ color: theme === "dark" ? "#fff" : "#111" }}>Home</Link>
+        
+        {/* 3. BURA BAX: Favorites linki əlavə etdik */}
+        <Link to="/favorites" style={{ color: theme === "dark" ? "#fff" : "#111" }}>Favorites</Link>
+
+        {/* 4. DİNAMİK AUTH SEÇİMİ: İstifadəçi giriş edibsə və ya etməyibsə */}
+        {isAuthenticated ? (
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            {/* Firebase-dən gələn istifadəçinin emaili və ya adı */}
+            <span style={{ color: theme === "dark" ? "#fff" : "#111", fontSize: "14px" }}>
+              {user?.email}
+            </span>
+            <button 
+              onClick={logout} 
+              style={{ padding: "3px 8px", cursor: "pointer", background: "#ff4d4d", color: "#fff", border: "none", borderRadius: "4px" }}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <>
+            <Link to="/login" style={{ color: theme === "dark" ? "#fff" : "#111" }}>Login</Link>
+            <Link to="/register" style={{ color: theme === "dark" ? "#fff" : "#111" }}>Register</Link>
+          </>
+        )}
+
+        <button 
+          onClick={toggleTheme} 
+          style={{ 
+            cursor: "pointer",
+            padding: "5px 10px",
+            borderRadius: "4px",
+            background: theme === "dark" ? "#fff" : "#111",
+            color: theme === "dark" ? "#111" : "#fff",
+            border: "none"
+          }}
+        >
+          {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+        </button>
       </nav>
     </header>
   );
